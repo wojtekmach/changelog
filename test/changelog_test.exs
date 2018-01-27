@@ -6,7 +6,24 @@ defmodule ChangelogTest do
   end
 
   test "parse!/1" do
-    assert Changelog.parse!(read_fixture("simple.md")) == [
+    string = """
+    # Changelog
+
+    ## Highlights
+
+    Foo
+
+    ## 1.0.0-dev
+
+    * Add foo/0
+    * Add bar/0
+
+    ## v0.1.0 (2018-01-01)
+
+    * Initial release
+    """
+
+    assert Changelog.parse!(string) == [
              %Changelog.Release{
                version: ~v"1.0.0-dev",
                date: nil,
@@ -18,7 +35,9 @@ defmodule ChangelogTest do
                notes: ["* Initial release"]
              }
            ]
+  end
 
+  test "ecto" do
     releases = Changelog.parse!(read_fixture("ecto.md"))
 
     assert Enum.map(releases, & &1.version) == [
