@@ -1,21 +1,54 @@
 # Changelog
 
-**TODO: Add description**
+Mix task for showing changelogs of Hex packages.
 
-## Installation
+## Usage
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `changelog` to your list of dependencies in `mix.exs`:
+Entire changelog:
 
-```elixir
-def deps do
-  [
-    {:changelog, "~> 0.1.0"}
-  ]
-end
+```
+$ mix changelog ecto
+## 2.2.8 - 2018-01-13
+(...)
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/changelog](https://hexdocs.pm/changelog).
+Changelog for just one version:
 
+```
+$ mix changelog ecto 2.2.0
+## 2.2.0 - 2017-08-22
+(...)
+
+$ mix changelog ecto latest
+## 2.2.8 - 2018-01-13
+(...)
+```
+
+Changelog between versions:
+
+```
+$ mix changelog ecto 2.2.6 2.2.7
+## 2.2.7 - 2017-12-03
+(...)
+## 2.2.6 - 2017-09-30
+
+
+
+$ mix changelog ecto 2.2.6 latest
+## 2.2.8 - 2018-01-13
+(...)
+## 2.2.7 - 2017-12-03
+(...)
+## 2.2.6 - 2017-09-30
+(...)
+```
+
+## Setup
+
+```
+$ mix archive.install github wojtekmach/changelog
+```
+
+## License
+
+[Apache 2.0](./LICENSE.md)
