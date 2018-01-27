@@ -1,6 +1,6 @@
 # Changelog
 
-Mix task for showing changelogs of Hex packages.
+Print changelog for a Hex package.
 
 ## Usage
 

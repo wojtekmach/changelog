@@ -3,6 +3,24 @@ defmodule Mix.Tasks.Changelog do
 
   @repo "hexpm"
 
+  @usage """
+  Usage:
+
+    mix changelog PACKAGE
+    mix changelog PACKAGE latest
+    mix changelog PACKAGE VERSION
+    mix changelog PACKAGE VERSION_FROM VERSION_TO
+    mix changelog PACKAGE VERSION_FROM latest
+  """
+
+  @shortdoc "Print changelog for a Hex package "
+
+  @moduledoc """
+  Print changelog for a Hex package
+
+  #{@usage}
+  """
+
   def run(args) do
     Hex.start()
     check_hex_version()
@@ -36,16 +54,7 @@ defmodule Mix.Tasks.Changelog do
         print_releases(releases)
 
       _ ->
-        Mix.raise("""
-        Usage:
-
-          mix changelog PACKAGE
-          mix changelog PACKAGE latest
-          mix changelog PACKAGE VERSION
-          mix changelog PACKAGE VERSION_FROM VERSION_TO
-          mix changelog PACKAGE VERSION_FROM latest
-
-        """)
+        Mix.raise(@usage)
     end
   end
 
