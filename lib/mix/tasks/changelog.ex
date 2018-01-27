@@ -10,15 +10,7 @@ defmodule Mix.Tasks.Changelog do
       [name] ->
         changelog = fetch_changelog(name)
         release = List.first(changelog)
-
-        if release.date do
-          IO.puts "## #{release.version} - #{release.date}"
-        else
-          IO.puts "## #{release.version}"
-        end
-
-        IO.puts ""
-        Enum.each(release.notes, &IO.puts(&1))
+        print_release(release)
 
       _ ->
         Mix.shell.error """
@@ -28,6 +20,17 @@ defmodule Mix.Tasks.Changelog do
           mix changelog PACKAGE VERSION
         """
     end
+  end
+
+  defp print_release(release) do
+    if release.date do
+      IO.puts "## #{release.version} - #{release.date}"
+    else
+      IO.puts "## #{release.version}"
+    end
+
+    IO.puts ""
+    Enum.each(release.notes, &IO.puts(&1))
   end
 
   defp fetch_changelog(name) do
