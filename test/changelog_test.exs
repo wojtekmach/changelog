@@ -7,9 +7,31 @@ defmodule ChangelogTest do
 
   test "parse!/1" do
     assert Changelog.parse!(read_fixture("simple.md")) == [
-      %Changelog.Release{version: ~v"1.0.0-dev", date: nil, notes: ["* Add foo/0", "* Add bar/0"]},
-      %Changelog.Release{version: ~v"0.1.0", date: ~D"2018-01-01", notes: ["* Initial release"]}
-    ]
+             %Changelog.Release{
+               version: ~v"1.0.0-dev",
+               date: nil,
+               notes: ["* Add foo/0", "* Add bar/0"]
+             },
+             %Changelog.Release{
+               version: ~v"0.1.0",
+               date: ~D"2018-01-01",
+               notes: ["* Initial release"]
+             }
+           ]
+
+    releases = Changelog.parse!(read_fixture("ecto.md"))
+
+    assert Enum.map(releases, & &1.version) == [
+             ~v"2.2.8",
+             ~v"2.2.7",
+             ~v"2.2.6",
+             ~v"2.2.5",
+             ~v"2.2.4",
+             ~v"2.2.3",
+             ~v"2.2.2",
+             ~v"2.2.1",
+             ~v"2.2.0"
+           ]
   end
 
   defp read_fixture(path) do
