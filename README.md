@@ -1,5 +1,7 @@
 # Changelog
 
+:warning: Work in progress :warning:
+
 Print changelog for a Hex package.
 
 ## Usage
@@ -48,6 +50,12 @@ $ mix changelog github:elixir-lang/elixir
 ## 1.7.0-dev
 (...)
 ```
+
+## Roadmap
+
+- :warning: stop using private Hex APIs!
+- nicer printing
+- better error handling
 
 ## Setup
 
