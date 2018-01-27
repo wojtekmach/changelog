@@ -5,6 +5,7 @@ defmodule Mix.Tasks.Changelog do
 
   def run(args) do
     Hex.start()
+    check_hex_version()
 
     case args do
       [name] ->
@@ -26,7 +27,7 @@ defmodule Mix.Tasks.Changelog do
         end)
 
       _ ->
-        Mix.shell.error """
+        Mix.raise """
         Usage:
 
           mix changelog PACKAGE
@@ -75,5 +76,17 @@ defmodule Mix.Tasks.Changelog do
   # FIXME: do not use Hex private APIs!
   defp unpack_tarball(tarball) do
     Hex.unpack_tar!({:binary, tarball}, :memory)
+  end
+
+  defp check_hex_version() do
+    {:ok, vsn} = :application.get_key(:hex, :vsn)
+
+    unless Version.match?("#{vsn}", "~> 0.17.1") do
+      Mix.raise """
+      changelog requires Hex ~> 0.17.1, got: #{vsn}. Please upgrade!
+
+      Also, stay tuned for a new changelog release that is not naughy and does not use Hex private APIs anymore!
+      """
+    end
   end
 end
