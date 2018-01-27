@@ -6,6 +6,10 @@ Print changelog for a Hex package.
 
 ## Usage
 
+Demo:
+
+[![asciicast](https://asciinema.org/a/159609.png)](https://asciinema.org/a/159609)
+
 Entire changelog:
 
 ```
