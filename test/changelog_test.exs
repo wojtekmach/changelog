@@ -7,8 +7,8 @@ defmodule ChangelogTest do
 
   test "parse!/1" do
     assert Changelog.parse!(read_fixture("simple.md")) == [
-      %Changelog.Release{version: ~v"1.0.0", notes: ["* Add foo/0", "* Add bar/0"]},
-      %Changelog.Release{version: ~v"0.1.0", notes: ["* Initial release"]}
+      %Changelog.Release{version: ~v"1.0.0-dev", date: nil, notes: ["* Add foo/0", "* Add bar/0"]},
+      %Changelog.Release{version: ~v"0.1.0", date: ~D"2018-01-01", notes: ["* Initial release"]}
     ]
   end
 
