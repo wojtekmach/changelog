@@ -40,6 +40,9 @@ defmodule ChangelogTest do
   test "ecto" do
     releases = Changelog.parse!(read_fixture("ecto.md"))
 
+    assert List.first(releases).version == ~v"2.2.8"
+    assert List.first(releases).date == ~D[2018-01-13]
+
     assert Enum.map(releases, & &1.version) == [
              ~v"2.2.8",
              ~v"2.2.7",
