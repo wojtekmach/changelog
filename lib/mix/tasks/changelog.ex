@@ -17,12 +17,22 @@ defmodule Mix.Tasks.Changelog do
         release = Enum.find(changelog, &Version.compare(&1.version, version) == :eq)
         print_release(release)
 
+      [name, version_from, version_to] ->
+        changelog = fetch_changelog(name)
+        releases = Enum.filter(changelog, &Version.compare(&1.version, version_from) in [:eq, :gt] and Version.compare(&1.version, version_to) in [:eq, :lt])
+        Enum.each(releases, fn release ->
+          print_release(release)
+          IO.puts("")
+        end)
+
       _ ->
         Mix.shell.error """
         Usage:
 
           mix changelog PACKAGE
           mix changelog PACKAGE VERSION
+          mix changelog PACKAGE VERSION_FROM VERSION_TO
+
         """
     end
   end
