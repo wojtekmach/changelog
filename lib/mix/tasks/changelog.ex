@@ -4,16 +4,16 @@ defmodule Mix.Tasks.Changelog do
   @usage """
   Usage:
 
-    mix changelog PACKAGE
-    mix changelog PACKAGE latest
-    mix changelog PACKAGE VERSION
-    mix changelog PACKAGE VERSION_FROM VERSION_TO
-    mix changelog PACKAGE VERSION_FROM latest
+      mix changelog PACKAGE
+      mix changelog PACKAGE latest
+      mix changelog PACKAGE VERSION
+      mix changelog PACKAGE VERSION_FROM VERSION_TO
+      mix changelog PACKAGE VERSION_FROM latest
 
   PACKAGE can also be:
 
-    github:ORG/REPO
-    github:ORG/REPO:REF
+      github:ORG/REPO
+      github:ORG/REPO:REF
 
   """
 
