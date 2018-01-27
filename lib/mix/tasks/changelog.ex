@@ -11,6 +11,12 @@ defmodule Mix.Tasks.Changelog do
     mix changelog PACKAGE VERSION
     mix changelog PACKAGE VERSION_FROM VERSION_TO
     mix changelog PACKAGE VERSION_FROM latest
+
+  PACKAGE can also be:
+
+    github:ORG/REPO
+    github:ORG/REPO:REF
+
   """
 
   @shortdoc "Print changelog for a Hex package "
@@ -81,12 +87,32 @@ defmodule Mix.Tasks.Changelog do
     Enum.each(release.notes, &IO.puts(&1))
   end
 
+  defp fetch_changelog("github:" <> name) do
+    fetch_github_changelog(name)
+  end
   defp fetch_changelog(name) do
+    fetch_hex_changelog(name)
+  end
+
+  defp fetch_hex_changelog(name) do
     latest_release = fetch_releases(name) |> List.last()
     tarball = fetch_tarball(name, latest_release.version)
     {_metadata, _checksum, files} = unpack_tarball(tarball)
     text = Map.new(files)["CHANGELOG.md"]
     Changelog.parse!(text)
+  end
+
+  # FIXME: do not use Hex private APIs!
+  defp fetch_github_changelog(string) do
+    {repo, ref} =
+      case String.split(string, ":", trim: true) do
+        [repo] -> {repo, "master"}
+        [repo, ref] -> {repo, ref}
+      end
+
+    url = "https://raw.githubusercontent.com/#{repo}/#{ref}/CHANGELOG.md"
+    {:ok, {200, body, _}} = Hex.HTTP.request(:get, url, %{}, nil)
+    Changelog.parse!(body)
   end
 
   # FIXME: do not use Hex private APIs!

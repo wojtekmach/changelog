@@ -34,6 +34,9 @@ defmodule Changelog do
           _ ->
             string
         end
+
+      _ ->
+        string
     end
   end
 
