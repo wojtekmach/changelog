@@ -1,0 +1,2 @@
+defmodule Changelog do
+end
