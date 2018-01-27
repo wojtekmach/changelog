@@ -56,6 +56,13 @@ defmodule ChangelogTest do
            ]
   end
 
+  test "phoenix" do
+    releases = Changelog.parse!(read_fixture("phoenix.md"))
+    versions = Enum.map(releases, & &1.version)
+    assert ~v"1.3.0" in versions
+    assert ~v"1.0.0" in versions
+  end
+
   defp read_fixture(path) do
     File.read!(Path.join(["test", "fixtures", path]))
   end
