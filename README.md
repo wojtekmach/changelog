@@ -46,16 +46,18 @@ $ mix changelog ecto 2.2.6 latest
 We can also fetch changelog directly from GitHub:
 
 ```
-$ mix changelog github:elixir-lang/elixir
-## 1.7.0-dev
+$ mix changelog github:elixir-ecto/ecto
+## 3.0.0-dev
 (...)
 ```
 
-## Roadmap
+This way we can see, you guessed it, changelog's changelog:
 
-- :warning: stop using private Hex APIs!
-- nicer printing
-- better error handling
+```
+$ mix changelog github:wojtekmach/changelog
+## 0.1.0-dev
+* Initial release
+```
 
 ## Setup
 
