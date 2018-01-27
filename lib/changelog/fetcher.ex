@@ -6,6 +6,7 @@ defmodule Changelog.Fetcher do
     check_hex_version()
     fetch_github_changelog(name)
   end
+
   def fetch_changelog(name) do
     check_hex_version()
     fetch_hex_changelog(name)

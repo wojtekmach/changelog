@@ -26,7 +26,7 @@ defmodule Changelog do
             string
         end
 
-      [version, date] ->
+      [version, date | _] ->
         case extract_version(version) do
           {:ok, version} ->
             {version, extract_date(date)}
@@ -44,10 +44,12 @@ defmodule Changelog do
   defp extract_version(string), do: Version.parse(string)
 
   defp extract_date(string) do
-    string
-    |> String.trim_leading("(")
-    |> String.trim_trailing(")")
-    |> Date.from_iso8601!()
+    string = string |> String.trim_leading("(") |> String.trim_trailing(")")
+
+    case Date.from_iso8601(string) do
+      {:ok, date} -> date
+      {:error, :invalid_format} -> nil
+    end
   end
 
   defp maybe_remove_heading([[%Version{}] | _] = lines), do: lines

@@ -13,7 +13,7 @@ defmodule ChangelogTest do
 
     Foo
 
-    ## 1.0.0-dev
+    ## 1.0.0-dev (in progress)
 
     * Add foo/0
     * Add bar/0

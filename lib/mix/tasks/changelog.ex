@@ -1,8 +1,6 @@
 defmodule Mix.Tasks.Changelog do
   use Mix.Task
 
-  @repo "hexpm"
-
   @usage """
   Usage:
 
