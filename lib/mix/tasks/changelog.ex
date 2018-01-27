@@ -12,6 +12,11 @@ defmodule Mix.Tasks.Changelog do
         release = List.first(changelog)
         print_release(release)
 
+      [name, version] ->
+        changelog = fetch_changelog(name)
+        release = Enum.find(changelog, &Version.compare(&1.version, version) == :eq)
+        print_release(release)
+
       _ ->
         Mix.shell.error """
         Usage:
