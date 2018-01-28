@@ -8,8 +8,6 @@ defmodule Changelog.MixProject do
       elixir: "~> 1.5",
       start_permanent: Mix.env() == :prod,
       escript: escript(),
-      elixirc_paths: ["lib", "vendor"],
-      erlrc_paths: ["src", "vendor"],
       deps: deps()
     ]
   end
