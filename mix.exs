@@ -30,7 +30,7 @@ defmodule Changelog.MixProject do
     [
       {:httpoison, ">= 0.0.0"},
       {:hex_tar, github: "wojtekmach/hex_tar"},
-      {:hex_registry, github: "wojtekmach/hex_registry"},
+      {:hex_registry, github: "wojtekmach/hex_registry"}
     ]
   end
 end

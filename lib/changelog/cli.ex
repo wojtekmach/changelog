@@ -46,8 +46,8 @@ defmodule Changelog.CLI do
         print_releases(releases)
 
       _ ->
-        IO.puts @usage
-        exit {:shutdown, 1}
+        IO.puts(@usage)
+        exit({:shutdown, 1})
     end
   end
 

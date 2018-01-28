@@ -17,16 +17,20 @@ defmodule Changelog do
   defp walk([{version, date} | rest], nil, []) do
     walk(rest, %Release{version: version, date: date}, [])
   end
+
   defp walk([{version, date} | rest], release, releases) do
     release = update_in(release.notes, &Enum.reverse/1)
     walk(rest, %Release{version: version, date: date}, [release | releases])
   end
+
   defp walk([_line | rest], nil, releases) do
     walk(rest, nil, releases)
   end
+
   defp walk([line | rest], release, releases) do
     walk(rest, %{release | notes: [line | release.notes]}, releases)
   end
+
   defp walk([], release, releases) do
     release = update_in(release.notes, &Enum.reverse/1)
     Enum.reverse([release | releases])
