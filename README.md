@@ -1,8 +1,8 @@
 # Changelog
 
-:warning: Work in progress :warning:
+:construction: Work in progress
 
-Print changelog for a Hex package.
+Print changelog of a Hex package.
 
 ## Usage
 
