@@ -23,25 +23,32 @@ defmodule Changelog.Fetcher do
         [repo, ref] -> {repo, ref}
       end
 
-    url = "https://raw.githubusercontent.com/#{repo}/#{ref}/CHANGELOG.md"
-    HTTPoison.get!(url).body
+    fetch_url("https://raw.githubusercontent.com/#{repo}/#{ref}/CHANGELOG.md")
   end
 
   defp fetch_releases(name) do
-    url = "https://repo.hex.pm/packages/#{name}"
-    body = HTTPoison.get!(url).body
+    body = fetch_url("https://repo.hex.pm/packages/#{name}")
     :hex_registry.decode_package(body).releases
   end
 
   defp fetch_tarball(name, version) do
-    url = "https://repo.hex.pm/tarballs/#{name}-#{version}.tar"
-    HTTPoison.get!(url).body
+    fetch_url("https://repo.hex.pm/tarballs/#{name}-#{version}.tar")
   end
 
   defp unpack_tarball(tarball) do
     case :hex_tar.unpack({:binary, tarball}) do
       {:ok, result} -> result
       {:error, reason} -> raise inspect(reason)
+    end
+  end
+
+  defp fetch_url(url) do
+    case HTTPoison.get!(url) do
+      %{status_code: 200, body: body} ->
+        body
+
+      %{status_code: status_code} ->
+        raise "error fetching #{url}: #{status_code}"
     end
   end
 end
