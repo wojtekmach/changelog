@@ -1,25 +1,22 @@
 defmodule Changelog.Fetcher do
   @moduledoc false
 
-  def fetch_changelog("github:" <> name) do
-    HTTPoison.start()
-    fetch_github_changelog(name)
+  def fetch("github:" <> name) do
+    fetch_github(name)
   end
 
-  def fetch_changelog(name) do
-    HTTPoison.start()
-    fetch_hex_changelog(name)
+  def fetch(name) do
+    fetch_hex(name)
   end
 
-  defp fetch_hex_changelog(name) do
+  defp fetch_hex(name) do
     latest_release = fetch_releases(name) |> List.last()
     tarball = fetch_tarball(name, latest_release.version)
     {_checksum, _metadata, files} = unpack_tarball(tarball)
-    text = Map.new(files)['CHANGELOG.md']
-    Changelog.parse!(text)
+    Map.new(files)['CHANGELOG.md']
   end
 
-  defp fetch_github_changelog(string) do
+  defp fetch_github(string) do
     {repo, ref} =
       case String.split(string, ":", trim: true) do
         [repo] -> {repo, "master"}
@@ -27,8 +24,7 @@ defmodule Changelog.Fetcher do
       end
 
     url = "https://raw.githubusercontent.com/#{repo}/#{ref}/CHANGELOG.md"
-    body = HTTPoison.get!(url).body
-    Changelog.parse!(body)
+    HTTPoison.get!(url).body
   end
 
   defp fetch_releases(name) do

@@ -1,4 +1,4 @@
-defmodule ChangelogTest do
+defmodule Changelog.ParserTest do
   use ExUnit.Case
 
   defmacrop sigil_v({:<<>>, _, [string]}, []) do
@@ -23,7 +23,7 @@ defmodule ChangelogTest do
     * Initial release
     """
 
-    assert Changelog.parse!(string) == [
+    assert Changelog.Parser.parse!(string) == [
              %Changelog.Release{
                version: ~v"1.0.0-dev",
                date: nil,
@@ -38,7 +38,7 @@ defmodule ChangelogTest do
   end
 
   test "ecto" do
-    releases = Changelog.parse!(read_fixture("ecto.md"))
+    releases = Changelog.Parser.parse!(read_fixture("ecto.md"))
 
     assert List.first(releases).version == ~v"2.2.8"
     assert List.first(releases).date == ~D[2018-01-13]
@@ -57,7 +57,7 @@ defmodule ChangelogTest do
   end
 
   test "phoenix" do
-    releases = Changelog.parse!(read_fixture("phoenix.md"))
+    releases = Changelog.Parser.parse!(read_fixture("phoenix.md"))
     versions = Enum.map(releases, & &1.version)
     assert ~v"1.3.0" in versions
     assert ~v"1.0.0" in versions

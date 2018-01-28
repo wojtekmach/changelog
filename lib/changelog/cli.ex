@@ -17,23 +17,25 @@ defmodule Changelog.CLI do
   """
 
   def main(args) do
+    HTTPoison.start()
+
     case args do
       [name] ->
-        changelog = Changelog.Fetcher.fetch_changelog(name)
+        changelog = fetch_changelog(name)
         print_releases(changelog)
 
       [name, "latest"] ->
-        changelog = Changelog.Fetcher.fetch_changelog(name)
+        changelog = fetch_changelog(name)
         release = List.first(changelog)
         print_release(release)
 
       [name, version] ->
-        changelog = Changelog.Fetcher.fetch_changelog(name)
+        changelog = fetch_changelog(name)
         release = Enum.find(changelog, &(Version.compare(&1.version, version) == :eq))
         print_release(release)
 
       [name, version_from, "latest"] ->
-        changelog = Changelog.Fetcher.fetch_changelog(name)
+        changelog = fetch_changelog(name)
 
         releases =
           Enum.filter(changelog, &(Version.compare(&1.version, version_from) in [:eq, :gt]))
@@ -41,7 +43,7 @@ defmodule Changelog.CLI do
         print_releases(releases)
 
       [name, version_from, version_to] ->
-        changelog = Changelog.Fetcher.fetch_changelog(name)
+        changelog = fetch_changelog(name)
         releases = Enum.filter(changelog, &match_version?(&1, version_from, version_to))
         print_releases(releases)
 
@@ -49,6 +51,12 @@ defmodule Changelog.CLI do
         IO.puts(@usage)
         exit({:shutdown, 1})
     end
+  end
+
+  defp fetch_changelog(name) do
+    name
+    |> Changelog.Fetcher.fetch()
+    |> Changelog.Parser.parse!()
   end
 
   defp match_version?(release, version_from, version_to) do
