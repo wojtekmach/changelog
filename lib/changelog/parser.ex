@@ -1,4 +1,6 @@
 defmodule Changelog.Parser do
+  @moduledoc false
+
   def parse!(string) do
     string
     |> String.split("\n", trim: true)

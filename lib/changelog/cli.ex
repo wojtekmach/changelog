@@ -55,8 +55,8 @@ defmodule Changelog.CLI do
 
   defp fetch_changelog(name) do
     name
-    |> Changelog.Fetcher.fetch()
-    |> Changelog.Parser.parse!()
+    |> Changelog.fetch!()
+    |> Changelog.parse!()
   end
 
   defp match_version?(release, version_from, version_to) do
