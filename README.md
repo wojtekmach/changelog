@@ -8,7 +8,7 @@ Print changelog for a Hex package.
 
 Demo:
 
-[![asciicast](https://asciinema.org/a/159609.png)](https://asciinema.org/a/159609)
+[![asciicast](https://asciinema.org/a/159659.png)](https://asciinema.org/a/159659)
 
 Entire changelog:
 
