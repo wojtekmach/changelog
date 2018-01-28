@@ -14,7 +14,6 @@ defmodule Changelog.CLI do
 
       github:ORG/REPO
       github:ORG/REPO:REF
-
   """
 
   def main(args) do
