@@ -48,8 +48,7 @@ defmodule Changelog.CLI do
         print_releases(releases)
 
       _ ->
-        IO.puts(@usage)
-        exit({:shutdown, 1})
+        error(@usage)
     end
   end
 
@@ -81,4 +80,11 @@ defmodule Changelog.CLI do
     IO.puts("")
     Enum.each(release.notes, &IO.puts(&1))
   end
+
+  defp error(text) do
+    IO.puts red(text)
+    exit({:shutdown, 1})
+  end
+
+  defp red(text), do: [IO.ANSI.red(), text, IO.ANSI.reset()]
 end
