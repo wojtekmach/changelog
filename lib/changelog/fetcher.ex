@@ -10,15 +10,30 @@ defmodule Changelog.Fetcher do
   end
 
   defp fetch_hex(name) do
-    latest_release = fetch_releases(name) |> List.last()
-    url = tarball_url(latest_release.version)
-    tarball = fetch_url(url)
-    {_checksum, _metadata, files} = unpack_tarball(tarball)
-    files = Map.new(files)
+    case fetch_releases(name) do
+      {:ok, releases} ->
+        latest_release = List.last(releases)
+        url = tarball_url(name, latest_release.version)
 
-    case Map.fetch(files, 'CHANGELOG.md') do
-      {:ok, value} -> value
-      :error -> {:error, {:not_found, url}}
+        case fetch_url(url) do
+          {:ok, tarball} ->
+            {_checksum, _metadata, files} = unpack_tarball(tarball)
+            files = Map.new(files)
+
+            case Map.fetch(files, 'CHANGELOG.md') do
+              {:ok, value} ->
+                value
+
+              :error ->
+                {:error, {:hex, :changelog_not_found, url}}
+            end
+        end
+
+      {:error, error} when error in [403, 404] ->
+        {:error, {:hex, :package_not_found, package_url(name)}}
+
+      {:error, error} ->
+        {:error, {:hex, error, package_url(name)}}
     end
   end
 
@@ -32,14 +47,20 @@ defmodule Changelog.Fetcher do
     url = "https://raw.githubusercontent.com/#{repo}/#{ref}/CHANGELOG.md"
 
     case fetch_url(url) do
-      {:ok, body} -> body
-      {:error, 404} -> {:error, {:not_found, url}}
+      {:ok, body} -> {:ok, body}
+      {:error, 404} -> {:error, {:github, :not_found, url}}
+      {:error, other} -> {:error, {:github, other, url}}
     end
   end
 
   defp fetch_releases(name) do
-    body = fetch_url!("https://repo.hex.pm/packages/#{name}")
-    :hex_registry.decode_package(body).releases
+    with {:ok, body} <- fetch_url(package_url(name)) do
+      {:ok, :hex_registry.decode_package(body).releases}
+    end
+  end
+
+  defp package_url(name) do
+    "https://repo.hex.pm/packages/#{name}"
   end
 
   defp tarball_url(name, version) do
@@ -60,13 +81,6 @@ defmodule Changelog.Fetcher do
 
       %{status_code: status_code} ->
         {:error, status_code}
-    end
-  end
-
-  defp fetch_url!(url) do
-    case fetch_url(url) do
-      {:ok, body} -> body
-      {:error, reason} -> raise "error fetching #{inspect url}, reason: #{inspect reason}"
     end
   end
 end

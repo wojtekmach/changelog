@@ -57,9 +57,20 @@ defmodule Changelog.CLI do
       {:ok, text} ->
         Changelog.parse!(text)
 
-      {:error, {:not_found, url}} ->
-        text = "CHANGELOG.md not found at #{url}"
-        error(text)
+      {:error, {:hex, :package_not_found, url}} ->
+        error("Hex package not found (#{url})")
+
+      {:error, {:hex, :changelog_not_found, url}} ->
+        error("Hex package does not contain CHANGELOG.md file (#{url})")
+
+      {:error, {:hex, reason, url}} ->
+        error("Error fetching changelog from Hex package: #{inspect reason} (#{url})")
+
+      {:error, {:github, :not_found, url}} ->
+        error("CHANGELOG.md not found in GitHub repository (#{url})")
+
+      {:error, {:github, reason, url}} ->
+        error("Error fetching changelog from GitHub repository: #{inspect reason} (#{url})")
     end
   end
 
