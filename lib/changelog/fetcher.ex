@@ -11,9 +11,15 @@ defmodule Changelog.Fetcher do
 
   defp fetch_hex(name) do
     latest_release = fetch_releases(name) |> List.last()
-    tarball = fetch_tarball(name, latest_release.version)
+    url = tarball_url(latest_release.version)
+    tarball = fetch_url(url)
     {_checksum, _metadata, files} = unpack_tarball(tarball)
-    Map.new(files)['CHANGELOG.md']
+    files = Map.new(files)
+
+    case Map.fetch(files, 'CHANGELOG.md') do
+      {:ok, value} -> value
+      :error -> {:error, {:not_found, url}}
+    end
   end
 
   defp fetch_github(string) do
@@ -23,16 +29,21 @@ defmodule Changelog.Fetcher do
         [repo, ref] -> {repo, ref}
       end
 
-    fetch_url("https://raw.githubusercontent.com/#{repo}/#{ref}/CHANGELOG.md")
+    url = "https://raw.githubusercontent.com/#{repo}/#{ref}/CHANGELOG.md"
+
+    case fetch_url(url) do
+      {:ok, body} -> body
+      {:error, 404} -> {:error, {:not_found, url}}
+    end
   end
 
   defp fetch_releases(name) do
-    body = fetch_url("https://repo.hex.pm/packages/#{name}")
+    body = fetch_url!("https://repo.hex.pm/packages/#{name}")
     :hex_registry.decode_package(body).releases
   end
 
-  defp fetch_tarball(name, version) do
-    fetch_url("https://repo.hex.pm/tarballs/#{name}-#{version}.tar")
+  defp tarball_url(name, version) do
+    "https://repo.hex.pm/tarballs/#{name}-#{version}.tar"
   end
 
   defp unpack_tarball(tarball) do
@@ -45,10 +56,17 @@ defmodule Changelog.Fetcher do
   defp fetch_url(url) do
     case HTTPoison.get!(url) do
       %{status_code: 200, body: body} ->
-        body
+        {:ok, body}
 
       %{status_code: status_code} ->
-        raise "error fetching #{url}: #{status_code}"
+        {:error, status_code}
+    end
+  end
+
+  defp fetch_url!(url) do
+    case fetch_url(url) do
+      {:ok, body} -> body
+      {:error, reason} -> raise "error fetching #{inspect url}, reason: #{inspect reason}"
     end
   end
 end
