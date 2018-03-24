@@ -53,7 +53,7 @@ defmodule Changelog.CLI do
   end
 
   defp fetch_changelog(name) do
-    case Changelog.fetch!(name) do
+    case Changelog.fetch(name) do
       {:ok, text} ->
         Changelog.parse!(text)
 

@@ -1,11 +1,11 @@
 defmodule Changelog.Fetcher do
   @moduledoc false
 
-  def fetch!("github:" <> name) do
+  def fetch("github:" <> name) do
     fetch_github(name)
   end
 
-  def fetch!(name) do
+  def fetch(name) do
     fetch_hex(name)
   end
 
@@ -22,7 +22,7 @@ defmodule Changelog.Fetcher do
 
             case Map.fetch(files, 'CHANGELOG.md') do
               {:ok, value} ->
-                value
+                {:ok, value}
 
               :error ->
                 {:error, {:hex, :changelog_not_found, url}}

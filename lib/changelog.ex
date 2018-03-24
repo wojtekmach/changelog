@@ -3,8 +3,8 @@ defmodule Changelog do
     defstruct [:version, :date, notes: []]
   end
 
-  def fetch!(name) do
-    Changelog.Fetcher.fetch!(name)
+  def fetch(name) do
+    Changelog.Fetcher.fetch(name)
   end
 
   def parse!(text) do
